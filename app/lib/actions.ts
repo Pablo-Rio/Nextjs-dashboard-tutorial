@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 
-const FormSchema = z.object({
+const FormInvoiceSchema = z.object({
     id: z.string(),
     customerId: z.string({
         invalid_type_error: 'Please select a customer.',
@@ -21,10 +21,24 @@ const FormSchema = z.object({
     date: z.string(),
 });
 
-const CreateInvoice = FormSchema.omit({ id: true, date: true });
-const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+const FormCustomerSchema = z.object({
+    id: z.string(),
+    firstname: z.string({
+        invalid_type_error: 'Please select your First Name.',
+    }),
+    lastname: z.string({
+        invalid_type_error: 'Please select your Last Name.',
+    }),
+    image_url: z.string({
+        invalid_type_error: 'Please select a valid url.',
+    })
+});
 
-export type State = {
+const CreateInvoice = FormInvoiceSchema.omit({ id: true, date: true });
+const CreateCustomer = FormCustomerSchema.omit({ id: true, date: true });
+const UpdateInvoice = FormInvoiceSchema.omit({ id: true, date: true });
+
+export type StateInvoice = {
     errors?: {
         customerId?: string[];
         amount?: string[];
@@ -33,7 +47,16 @@ export type State = {
     message?: string | null;
 };
 
-export async function createInvoice(prevState: State, formData: FormData) {
+export type StateCustomer = {
+    errors?: {
+        firstname?: string[];
+        lastname?: string[];
+        image_url?: string[];
+    };
+    message?: string | null;
+};
+
+export async function createInvoice(prevState: StateInvoice, formData: FormData) {
     // Validate form using Zod
     const validatedFields = CreateInvoice.safeParse({
         customerId: formData.get('customerId'),
@@ -74,7 +97,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
 
 export async function updateInvoice(
     id: string,
-    prevState: State,
+    prevState: StateInvoice,
     formData: FormData,
 ) {
     const validatedFields = UpdateInvoice.safeParse({
@@ -105,6 +128,56 @@ export async function updateInvoice(
 
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
+}
+
+export async function createCustomer(prevState: StateCustomer, formData: FormData) {
+    // Validate form using Zod
+    const validatedFields = CreateCustomer.safeParse({
+        firstname: formData.get('firstname'),
+        lastname: formData.get('lastname'),
+        image_url: formData.get('image_url')
+    });
+
+    // Affiche en console les données du formulaire
+    console.log(formData.get('firstname'), formData.get('lastname'), formData.get('image_url'));
+    console.log(validatedFields);
+
+    // If form validation fails, return errors early. Otherwise, continue.
+    if (!validatedFields.success || formData.get('firstname') === '' || formData.get('lastname') === '' || formData.get('image_url') === '') {
+        return {
+            message: 'Missing Fields. Failed to Create Customer.',
+        };
+    }
+
+    let firstname, lastname, image_url;
+
+    // Prepare data for insertion into the database
+    if (validatedFields.success) {
+        firstname = validatedFields.data.firstname;
+        lastname = validatedFields.data.lastname;
+        image_url = validatedFields.data.image_url;
+    }
+
+    const name = firstname + ' ' + lastname;
+    const email = firstname.toLowerCase() + '.' + lastname.toLowerCase() + '@mail.com';
+
+    // Insert data into the database
+    // L'id s'incrémente automatiquement
+    try {
+        await sql`
+        INSERT INTO customers (name, email, image_url)
+        VALUES (${name}, ${email}, ${image_url})
+    `;
+    } catch (error) {
+        console.log(error);
+        return {
+            message: 'Database Error: Failed to Create Customer.',
+        };
+    }
+
+    // Revalidate the cache for the invoices page and redirect the user.
+    revalidatePath('/dashboard/customers');
+    redirect('/dashboard/customers');
 }
 
 export async function authenticate(

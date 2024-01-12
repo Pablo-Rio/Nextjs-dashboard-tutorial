@@ -64,3 +64,6 @@ Ajout des deux colonnes dans customers/table.tsx
    Ajouter un bouton qui permet de saisir et enregistrer un nouveau client. Là encore, basez-vous sur /dashboard/invoices.
    Note : pour vous simplifier un peu les choses, on ne vous demande pas de gérer l'upload d'une image de profil. Vous pouvez
    directement saisir son path. Et ne perdez pas de temps à chercher des images... dupliquez et renommez celles déjà présentes.
+
+
+Création du formulaire, modifications dans actions pour ajouter des infos dans la bdd
