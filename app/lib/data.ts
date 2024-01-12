@@ -214,8 +214,8 @@ export async function fetchFilteredCustomers(    query: string,
                    customers.email,
                    customers.image_url,
                    COUNT(invoices.id)                                                         AS total_invoices,
-                   SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
-                   SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END)    AS total_paid
+                   SUM(CASE WHEN invoices.status = 'pending' THEN 1 ELSE 0 END) AS total_pending,
+                   SUM(CASE WHEN invoices.status = 'paid' THEN 1 ELSE 0 END)    AS total_paid
             FROM customers
                      LEFT JOIN invoices ON customers.id = invoices.customer_id
             WHERE customers.name ILIKE ${`%${query}%`}
@@ -229,9 +229,7 @@ export async function fetchFilteredCustomers(    query: string,
         `;
 
         const customers = data.rows.map((customer) => ({
-            ...customer,
-            total_pending: formatCurrency(customer.total_pending),
-            total_paid: formatCurrency(customer.total_paid),
+            ...customer
         }));
 
         return customers;
