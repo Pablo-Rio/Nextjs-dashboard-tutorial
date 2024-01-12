@@ -20,7 +20,7 @@ Nouveau dossier avec un page.tsx pour une nouvelle route. Image dans le dossier 
 2. Modifier la barre latérale de navigation pour ajouter un menu 'Crédits' en plus de 'Home', 'Invoices' et 'Customers'.
    Ce nouveau menu renverra bien entendu vers /dashboard/credits
 
-   
+Dans nav-links.tsx, ajout d'un nouvel objet dans le tableau links.
 
 
 3. /dashboard
