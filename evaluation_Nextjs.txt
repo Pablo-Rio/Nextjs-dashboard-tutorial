@@ -23,10 +23,15 @@ Nouveau dossier avec un page.tsx pour une nouvelle route. Image dans le dossier 
 Dans nav-links.tsx, ajout d'un nouvel objet dans le tableau links.
 
 
+
 3. /dashboard
    Ajouter une "carte" qui indique le plus gros montant de toutes les factures déjà payées.
    Note : le composant Card a une prop 'type' pour laquelle vous utiliserez une des valeurs déjà utilisée pour les autres cartes.
    Note 2 : ce n'est pas grave si l'ajout de la carte "désorganise" un peu l'interface. Et on ne vous demande pas de modifier le cardsSkeleton en conséquence.
+
+Dans cards.tsx, ajout d'une nouvelle carte avec comme valeur highestAmount.
+highestAmount est calculé dans data.ts en faisant une requête SQL, puis mis en forme avec formatCurrency.
+
 
 
 4. /dashboard/customers
