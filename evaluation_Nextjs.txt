@@ -40,6 +40,14 @@ highestAmount est calculé dans data.ts en faisant une requête SQL, puis mis en
    Note : basez-vous sur /dashboard/invoices. Vous pouvez reprendre des composants déjà présents ou si besoin en dupliquer/modifier
    pour l'adapater aux données.
 
+Ajout de fetchFilteredCustomers, fetchCustomersPages dans data.ts.
+Modifications de customers/table.tsv pour afficher les bonnes données.
+Modifications de customers/page.tsx.
+Tout sur le modèle de invoices.
+
+TODO: Faire le squelette chargement de la page.
+
+
 
 5. /dashboard/customers
    Modifier votre affichage pour faire apparaître en plus pour chaque client le nombre de factures qu'il a déjà payé et le nombre
