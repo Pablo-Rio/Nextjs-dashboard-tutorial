@@ -67,3 +67,8 @@ Ajout des deux colonnes dans customers/table.tsx
 
 
 Création du formulaire, modifications dans actions pour ajouter des infos dans la bdd
+
+Ajout de :
+Paul
+Rivière
+/customers/paul.png
